@@ -1,0 +1,50 @@
+/**
+ * MK4duo 3D Printer Firmware
+ *
+ * Based on Marlin, Sprinter and grbl
+ * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (C) 2013 - 2016 Alberto Cotronei @MagoKimbra
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#include "../../base.h"
+
+#if ENABLED(MESH_BED_LEVELING)
+
+  mesh_bed_leveling mbl;
+
+  uint8_t mesh_bed_leveling::status;
+
+  float mesh_bed_leveling::z_offset,
+        mesh_bed_leveling::z_values[MESH_NUM_Y_POINTS][MESH_NUM_X_POINTS],
+        mesh_bed_leveling::index_to_xpos[MESH_NUM_X_POINTS],
+        mesh_bed_leveling::index_to_ypos[MESH_NUM_Y_POINTS];
+
+  mesh_bed_leveling::mesh_bed_leveling() {
+    for (uint8_t i = 0; i < MESH_NUM_X_POINTS; ++i)
+      index_to_xpos[i] = MESH_MIN_X + i * (MESH_X_DIST);
+    for (uint8_t i = 0; i < MESH_NUM_Y_POINTS; ++i)
+      index_to_ypos[i] = MESH_MIN_Y + i * (MESH_Y_DIST);
+    reset();
+  }
+
+  void mesh_bed_leveling::reset() {
+    status = MBL_STATUS_NONE;
+    z_offset = 0;
+    ZERO(z_values);
+  }
+
+#endif  // MESH_BED_LEVELING
